@@ -6,7 +6,7 @@ use Carp;
 
 use strict;
 use warnings;
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 require 5.8.1;
 
 =head1 NAME
@@ -345,7 +345,7 @@ sub rowobject_to_columns {
                 }
                 die "Setting cell failed: $@" if ($@);
                 if (defined $col->{type}) {
-                    eval "\$cell = \&Helpers::Types::$col->{type}(\$cell, \$self->{c}, \$self->{formdef})";
+                    eval "\$cell = \&CatalystX::ListFramework::Helpers::Types::$col->{type}(\$cell, \$self->{c}, \$self->{formdef})";
                     confess "Type-helper call failed: $@" if ($@);
                 }
             }
@@ -482,7 +482,7 @@ sub stash_listing {
 
             # Do transforms based on field type, e.g. for dates turn x/y/zzzz into zzzz-yy-xx
             if (defined $searches_entry->{type}) {
-                eval "\$match = \&Helpers::Types::inverse$searches_entry->{type}(\"$match\", \$c, \$self->{formdef})";
+                eval "\$match = \&CatalystX::ListFramework::Helpers::Types::inverse$searches_entry->{type}(\"$match\", \$c, \$self->{formdef})";
                 confess "Type-helper call failed: $@" if ($@);
             }
             $match = '%'.$match.'%' if (lc $searches_entry->{op} eq 'like');
@@ -681,7 +681,7 @@ sub update_from_query {  # Update a record. Probably called from an infobox scre
             }
             else {
                 if (defined $col->{type}) {
-                    eval "\$new_value = \&Helpers::Types::inverse$col->{type}(\"$new_value\", \$c, \$self->{formdef})";
+                    eval "\$new_value = \&CatalystX::ListFramework::Helpers::Types::inverse$col->{type}(\"$new_value\", \$c, \$self->{formdef})";
                     if ($@) {die "Type-helper call failed: $@";}
                 }
                 # Do the update

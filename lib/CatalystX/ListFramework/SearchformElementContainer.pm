@@ -1,6 +1,7 @@
 package CatalystX::ListFramework::SearchformElementContainer;
 use strict;
 use warnings;
+our $VERSION = '0.1';
 
 # This is a custom container making elements only show the input box, not the label. Labels are retrieved separately.
 

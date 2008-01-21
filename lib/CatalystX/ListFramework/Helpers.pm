@@ -1,6 +1,7 @@
 package CatalystX::ListFramework::Helpers;
 use strict;
 use warnings;
+our $VERSION = '0.1';
 
 sub lc {
     my ($data, $c, $formdef) = @_;
@@ -12,7 +13,9 @@ sub uc {
 }
 
 
-package Helpers::Types;
+package CatalystX::ListFramework::Helpers::Types;
+
+our $VERSION = '0.1';
 
 sub date {
     my ($data, $c, $formdef) = @_;
