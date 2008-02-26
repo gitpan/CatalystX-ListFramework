@@ -4,7 +4,7 @@ TEMPLATE OK
 <form>
 
 [% INCLUDE list.tt
-    formbuilder = myprefixformbuilder
+    listframework = myprefixlistframework
     results = myprefixresults
     sums = myprefixsums
     search = myprefixsearch

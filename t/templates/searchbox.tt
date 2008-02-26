@@ -18,14 +18,14 @@
 
 <SCRIPT>
 Ext.onReady(function(){
-    [% FOREACH formfield IN formbuilder.formdef.search %]
+    [% FOREACH formfield IN listframework.formdef.search %]
 // try [% formfield.id %] / [% formfield.heading %]
          [% IF formfield.autocomplete; ac_counter = ac_counter + 1;%]
 // do [% formfield.id %]
 
         var datastore[% ac_counter %] = new Ext.data.Store({
             proxy: new Ext.data.HttpProxy({
-            url: '[% c.req.base %]complete/[% formbuilder.formdef.columns.OBJECT.form_type %]/[% formfield.autocomplete.0 %]/[% formfield.autocomplete.1 %]'
+            url: '[% c.req.base %]complete/[% listframework.formdef.columns.OBJECT.form_type %]/[% formfield.autocomplete.0 %]/[% formfield.autocomplete.1 %]'
             }),
             reader: new Ext.data.JsonReader({
             root: 'results',

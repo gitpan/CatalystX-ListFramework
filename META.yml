@@ -1,8 +1,9 @@
 --- 
-abstract: foundations for displaying and editing lists (CRUD) in a Catalyst app.
+abstract: foundations for displaying and editing lists (CRUD) in a Catalyst application
 author: Andrew Payne C<< <andrew@dragonstaff.com> >>.
 build_requires: 
   Catalyst::Runtime: 0
+  Catalyst::View::JSON: 0
   DBD::SQLite2: 0
   HTML::Widget: 0
   Test::More: 0
@@ -19,4 +20,4 @@ no_index:
   directory: 
     - inc
     - t
-version: 0.2
+version: 0.3

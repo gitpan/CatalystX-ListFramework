@@ -6,20 +6,20 @@ use Carp;
 
 use strict;
 use warnings;
-our $VERSION = '0.2';
+our $VERSION = '0.3';
 require 5.8.1;
 
 =head1 NAME
 
-CatalystX::ListFramework - foundations for displaying and editing lists (CRUD) in a Catalyst app.
+CatalystX::ListFramework - foundations for displaying and editing lists (CRUD) in a Catalyst application
 
 =head1 SYNOPSIS
 
-    package MyApp::Controller::Root;
+    package MyApp::Controller::Foo;
     use base 'Catalyst::Controller';
     use CatalystX::ListFramework;
     
-    sub listsearch :Path('/listsearch') {
+    sub listandsearch :Local {
         my ($self, $c, $kind) = @_;
         my $lf = CatalystX::ListFramework->new($kind, $c);
         my $restrict = {};
@@ -27,23 +27,23 @@ CatalystX::ListFramework - foundations for displaying and editing lists (CRUD) i
         $c->stash->{template} = 'list-and-search.tt';
     }
 
-    sub detail :Path('/get') {
+    sub get :Local {
         my ($self, $c, $kind, $id) = @_;
         my $lf = CatalystX::ListFramework->new($kind, $c);
-        $lf->stash_infoboxes({'me.id' => [{'=' => $id}]}); 
+        $lf->stash_infoboxes({'me.id' => $id}); 
         $c->stash->{kind} = $kind;
-        $c->stash->{id} = $id;  # the update form adds it to the URL
+        $c->stash->{id} = $id;  # the update form adds this to the URL
         $c->stash->{template} = 'detail.tt';
     }
     
-    sub update :Path('/update') {
+    sub update :Local {
         my ($self, $c, $kind, $id) = @_;
         my $lf = CatalystX::ListFramework->new($kind, $c);
-        $lf->update_from_query({'me.id' => [{'=' => $id}]}); 
-        $c->res->redirect("/listsearch/$kind");
+        $lf->update_from_query({'me.id' => $id}); 
+        $c->res->redirect("/listandsearch/$kind");
     }
     
-    sub create :Path('/create') {
+    sub create :Local {
         my ($self, $c, $kind) = @_;
         my $lf = CatalystX::ListFramework->new($kind, $c);
         my $id = $lf->create_new; 
@@ -57,7 +57,7 @@ creating new ones is a common task in Catalyst applications.
 This class supplies such lists, and forms to edit such records, to a set of
 templates, using simple definition files and your L<DBIx::Class> Catalyst
 model. A search form is also supplied, which can include JSON-powered
-ExtJS comboboxes (see www.extjs.com).
+ExtJS comboboxes (see L<http://www.extjs.com/>).
 
 To run the included demo application, grab a copy of ExtJS, then
 
@@ -82,7 +82,7 @@ These are divided into 'master' files and 'site' files and are named I<kind>.for
 Files under C<master/> describe a I<kind>'s source, what fields it has available, and how it is
 associated with other schema classes.
 Files under C<site/> describe how the data is displayed on the page.
-This division, and the naming, implies that a vendor could supply the master files, while a particular
+This division, and the naming, implies that a vendor (you) could supply the master files, while a particular
 installation could use customised site files to suit their needs.
 
 These are best understood by looking at the example files.
@@ -118,7 +118,7 @@ specifying C<function(field)>. For example,
 
     field => [ \'(', uc(surname), \')' ]
     
-If a 'type' field is specified', then a coresponding filter function in Helper::Types is called.
+If a 'type' field is specified', then a coresponding filter function in ::Helper::Types is called.
 
 There should be a special entry,
 C<< OBJECT => {primary_key => 'id'} >>, which specifies the table's primary key (and has other uses).
@@ -182,7 +182,7 @@ You can also override the 'heading' parameter from the 'site' .form file.
 
 The detail view for an entry is split into 'boxes', which are rendered as ExtJS tabs in the demo app.
 You can specify local or foreign schema fields by the 'id' property, and headings etc can be overridden as usual.
-All fields are editable, unless 'not_editable' is true.
+All fields are editable, unless 'not_editable' is true or the field is more complicated than just a table column.
 If '.OBJECT' is specified, a dropdown list of choices is presented.
 
         track => [
@@ -198,8 +198,11 @@ If '.OBJECT' is specified, a dropdown list of choices is presented.
 
 =head1 TEMPLATES
 
+Documentation TODO
+
 =head1 JSON
 
+Documentation TODO
 
 =cut
 
@@ -332,7 +335,7 @@ sub rowobject_to_columns {
                 my $tmp;
                 eval "\$tmp = \$row_in_wanted_table->$2";
                 if ($@) { die "Eval of row->$2 failed"; }
-                eval "\$cell .= \&Helpers::$1(\$tmp, \$self->{c}, \$self->{formdef})";
+                eval "\$cell .= \&CatalystX::ListFramework::Helpers::$1(\$tmp, \$self->{c}, \$self->{formdef})";
                 confess "Helper call failed: $@" if ($@);
             }
             else { # a simple column name. NB: field can't have dots any more - that's what id is for
@@ -548,7 +551,7 @@ sub stash_listing {
     
     $c->stash->{"${prefix}results"} = \@processed;
     $c->stash->{"${prefix}pager"} = $rs->pager if ($template_opts->{pager}); # Data::Page object
-    $c->stash->{"${prefix}formbuilder"} = $self;
+    $c->stash->{"${prefix}listframework"} = $self;
     $c->stash->{"${prefix}view"} = $view;  # for TT to pass to get_listing_columns
     ($c->stash->{"${prefix}search"}, $c->stash->{"${prefix}searchtypes"}) = $self->create_search_widget($prefix, $c);
 }
@@ -645,7 +648,7 @@ sub update_from_query {  # Update a record. Probably called from an infobox scre
     my $c = $self->{c};
     my $rs = $c->model($self->{formdef}->{model})->search($search, {});  # NB: no joins. We'll assume we're looking locally for an id
     my $db_row_obj = $rs->first;
-    unless (ref $db_row_obj) { die "No such object found"; }
+    unless (ref $db_row_obj) { confess "No such object found"; }
     
     # All editable fields must be listed in the infobox section
     my $all_cols;
@@ -829,18 +832,14 @@ $Template::Stash::SCALAR_OPS->{'money4format'} = sub {
     return $thing;
 };
 
-$Template::Stash::SCALAR_OPS->{'intpart'} = sub {  # for payroll_no
-    my $thing = shift;
-    no warnings 'numeric';
-    my $ithing = int($thing);
-    use warnings 'numeric';
-    return $ithing;
-};
-
 
 1;
 
 =head1 BUGS
+
+Probably many, and many areas are in need of further work.
+See all the TODO tags within the code.
+Please feel free to email me with comments or patches.
 
 Something somewhere between SQLite and DBIx::Class is buggy when it comes to row updates.
 You will see TT error screens on the demo app about "too many rows updated". This goes away if you refresh

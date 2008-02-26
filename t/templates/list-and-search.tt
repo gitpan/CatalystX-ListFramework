@@ -4,7 +4,7 @@
 <form name="form0" id="form0">
 
 [% INCLUDE searchbox.tt
-    formbuilder = myprefixformbuilder
+    listframework = myprefixlistframework
     search = myprefixsearch
     searchtypes = myprefixsearchtypes
     view = myprefixview
@@ -13,7 +13,7 @@
 %]
 
 [% INCLUDE list.tt
-    formbuilder = myprefixformbuilder
+    listframework = myprefixlistframework
     results = myprefixresults
     sums = myprefixsums
     search = myprefixsearch

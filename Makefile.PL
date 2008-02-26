@@ -8,6 +8,7 @@ build_requires 'Test::WWW::Mechanize::Catalyst';
 build_requires 'Test::More';
 build_requires 'HTML::Widget';
 build_requires 'DBD::SQLite2';
+build_requires 'Catalyst::View::JSON';
 build_requires 'ok';
 
 WriteAll();

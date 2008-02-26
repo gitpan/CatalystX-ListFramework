@@ -1,7 +1,7 @@
 <h2>
-    [% formbuilder.formdef.title %]
-    [% IF formbuilder.formdef.create_uri %]
-        [% curi = formbuilder.formdef.create_uri %]
+    [% listframework.formdef.title %]
+    [% IF listframework.formdef.create_uri %]
+        [% curi = listframework.formdef.create_uri %]
         [% IF add_to_create; curi = "$curi/$add_to_create"; END %]
         - <a href='#' onclick='window.open("[% c.uri_for(curi) %]", "[%data%]", "resizable=1,scrollbars=1,width=500,height=300");'>add new</a>
     [% END %]
@@ -10,7 +10,7 @@
 <table class="listing">
 <tr style="vertical-align:top">
 
-[% FOREACH heading IN formbuilder.get_listing_columns(view) %]
+[% FOREACH heading IN listframework.get_listing_columns(view) %]
 <th class="listcolheadsort">
     [%
         link = heading.id;
@@ -42,7 +42,7 @@
 -%]
 
 <tr class="listrow[% bgindex = loop.count % 2; bgindex %]">
-[% FOREACH col IN formbuilder.get_listing_columns(view) %]
+[% FOREACH col IN listframework.get_listing_columns(view) %]
   <td>
      [% cell = col.id; data = row.$cell; %]
      [% IF col.type == "money"; data = data.moneyformat; END %]
@@ -62,9 +62,9 @@
 [% END %]
 
 [% IF options.deletable %]
-    [% pk = formbuilder.formdef.columns.OBJECT.primary_key; objid = row.$pk; %]
+    [% pk = listframework.formdef.columns.OBJECT.primary_key; objid = row.$pk; %]
     <td>
-        <a href='#' onclick='window.open("[% c.uri_for("$formbuilder.formdef.delete_uri/$objid") %]", "deleting", "resizable=1,scrollbars=1,width=500,height=300");'>[DELETE]</a>
+        <a href='#' onclick='window.open("[% c.uri_for("$listframework.formdef.delete_uri/$objid") %]", "deleting", "resizable=1,scrollbars=1,width=500,height=300");'>[DELETE]</a>
     </td>
 [% END %]
 
@@ -74,7 +74,7 @@
 
 [% IF options.sums %]
 <tr class="listrowsum">
-[% FOREACH col IN formbuilder.get_listing_columns(view) %]
+[% FOREACH col IN listframework.get_listing_columns(view) %]
   <td>[% cell = col.id; data = sums.$cell; IF (data && col.type == "money"); data = data.moneyformat; END; GET data %]</td>
   [% IF col.do_running_total %]
     <td>  </td>  

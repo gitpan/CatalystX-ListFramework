@@ -55,7 +55,7 @@ Ext.EventManager.onDocumentReady(ITabs.init, ITabs, true);
 <form>
 
 [% INCLUDE list.tt
-    formbuilder = myprefixformbuilder
+    listframework = myprefixlistframework
     results = myprefixresults
     sums = myprefixsums
     search = myprefixsearch
