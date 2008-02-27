@@ -1,4 +1,3 @@
-CatalystX-ListFramework-0.3.tar
 Changes
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
@@ -12,7 +11,7 @@ lib/CatalystX/ListFramework.pm
 lib/CatalystX/ListFramework/Helpers.pm
 lib/CatalystX/ListFramework/SearchformElementContainer.pm
 Makefile.PL
-MANIFEST			This list of files
+MANIFEST
 META.yml
 README
 t/00-load.t
