@@ -1,4 +1,4 @@
-CatalystX-ListFramework.kpf
+CatalystX-ListFramework-0.3.tar
 Changes
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
@@ -52,3 +52,5 @@ t/templates/list-simple.tt
 t/templates/list.tt
 t/templates/refreshopener.tt
 t/templates/searchbox.tt
+t/templates/wrapper.tt
+TODO

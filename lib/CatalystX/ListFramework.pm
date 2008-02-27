@@ -6,7 +6,7 @@ use Carp;
 
 use strict;
 use warnings;
-our $VERSION = '0.3';
+our $VERSION = '0.4';
 require 5.8.1;
 
 =head1 NAME
